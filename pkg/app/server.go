@@ -35,14 +35,10 @@ func (s *Server) getCards(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cards := s.cardSvc.AllCards()
+	var dtos []*dto.CardDTO
 
 	for _, c := range cards {
-		if userId != c.UserId {
-			dtos := dto.CardErrDTO{Err: card.ErrUserId.Error()}
-			replyErr(w, dtos)
-			return
-		} else {
-			var dtos []*dto.CardDTO
+		if userId == c.UserId {
 			dtos = append(
 				dtos,
 				&dto.CardDTO{
@@ -52,10 +48,9 @@ func (s *Server) getCards(w http.ResponseWriter, r *http.Request) {
 					Type:   c.Type,
 					System: c.System,
 				})
-			reply(w, dtos)
 		}
 	}
-
+	reply(w, dtos)
 }
 
 func (s *Server) addCard(w http.ResponseWriter, r *http.Request) {
@@ -102,7 +97,6 @@ func reply(w http.ResponseWriter, dtos []*dto.CardDTO) {
 func replyErr(w http.ResponseWriter, dtos dto.CardErrDTO) {
 	respBody, err := json.Marshal(dtos)
 	if err != nil {
-		log.Println(12233)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

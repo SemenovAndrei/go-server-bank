@@ -55,9 +55,6 @@ func (s *Service) Add(userId, cardType, cardSystem string) (*Card, error) {
 		return &Card{}, err
 	}
 
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
 	number := s.getNumber()
 
 	card := &Card{
@@ -67,6 +64,9 @@ func (s *Service) Add(userId, cardType, cardSystem string) (*Card, error) {
 		Type:   cardType,
 		System: cardSystem,
 	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
 	s.cards = append(s.cards, card)
 	return card, nil
@@ -93,6 +93,8 @@ func getSystemCard(systemCard string) error {
 }
 
 func (s *Service) getNumber() int64 {
+	s.mun.Lock()
+	defer s.mun.Unlock()
 	s.number += 1
 	return s.number
 }
