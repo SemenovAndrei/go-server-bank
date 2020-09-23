@@ -1,0 +1,6 @@
+###
+GET http://localhost:9999/getCards?userId=12 HTTP/1.1
+
+###
+GET http://localhost:9999/addCard?userId=12&type=virtual&system=visa HTTP/1.1
+
