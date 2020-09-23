@@ -2,7 +2,7 @@ package app
 
 import (
 	"encoding/json"
-	"github.com/i-hit/go-server-bank.git/cmd/app/dto"
+	"github.com/i-hit/go-server-bank.git/cmd/bank/app/dto"
 	"github.com/i-hit/go-server-bank.git/pkg/card"
 	"log"
 	"net/http"
