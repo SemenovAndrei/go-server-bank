@@ -1,6 +1,18 @@
 ###
-GET http://localhost:9999/getCards?userId=12 HTTP/1.1
+GET http://localhost:9999/getCards?userid=12 HTTP/1.1
 
 ###
-GET http://localhost:9999/addCard?userId=12&type=virtual&system=visa HTTP/1.1
+GET http://localhost:9999/addCard?userid=12&type=virtual&system=visa HTTP/1.1
+
+###
+GET http://localhost:9999/getCards?userid=123 HTTP/1.1
+
+###
+GET http://localhost:9999/addCard?userid=123&type=virtual&system=visa HTTP/1.1
+
+###
+GET http://localhost:9999/addCard?userid=12&type=main&system=visa HTTP/1.1
+
+###
+GET http://localhost:9999/addCard?userid=12&type=virtual&system=mir HTTP/1.1
 

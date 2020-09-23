@@ -2,7 +2,6 @@ package card
 
 import (
 	"errors"
-	"log"
 	"strings"
 	"sync"
 )
@@ -40,8 +39,6 @@ func (s *Service) AllCards() []*Card {
 }
 
 func (s *Service) Add(userId, cardType, cardSystem string) (*Card, error) {
-	log.Println(userId, cardType, cardSystem)
-	number := s.getNumber()
 
 	err := getTypeCard(cardType)
 	if err != nil {
@@ -58,6 +55,11 @@ func (s *Service) Add(userId, cardType, cardSystem string) (*Card, error) {
 		return &Card{}, err
 	}
 
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	number := s.getNumber()
+
 	card := &Card{
 		Id:     number,
 		UserId: userId,
@@ -66,8 +68,6 @@ func (s *Service) Add(userId, cardType, cardSystem string) (*Card, error) {
 		System: cardSystem,
 	}
 
-	s.mu.Lock()
-	defer s.mu.Unlock()
 	s.cards = append(s.cards, card)
 	return card, nil
 }
@@ -85,7 +85,7 @@ func getTypeCard(typeCard string) error {
 func getSystemCard(systemCard string) error {
 	systemsCard := []string{"Visa", "MasterCard"}
 	for _, value := range systemsCard {
-		if strings.ToLower(value) == strings.ToLower(systemCard){
+		if strings.ToLower(value) == strings.ToLower(systemCard) {
 			return nil
 		}
 	}
@@ -93,8 +93,6 @@ func getSystemCard(systemCard string) error {
 }
 
 func (s *Service) getNumber() int64 {
-	s.mun.Lock()
-	defer s.mun.Unlock()
 	s.number += 1
 	return s.number
 }

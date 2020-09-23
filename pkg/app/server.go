@@ -2,7 +2,7 @@ package app
 
 import (
 	"encoding/json"
-	"github.com/i-hit/go-server-bank.git/cmd/bank/app/dto"
+	"github.com/i-hit/go-server-bank.git/pkg/app/dto"
 	"github.com/i-hit/go-server-bank.git/pkg/card"
 	"log"
 	"net/http"
@@ -27,7 +27,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) getCards(w http.ResponseWriter, r *http.Request) {
-	userId := r.FormValue("userId")
+	userId := r.FormValue("userid")
 	if userId == "" {
 		dtos := dto.CardErrDTO{Err: card.ErrUserId.Error()}
 		replyErr(w, dtos)
@@ -35,10 +35,14 @@ func (s *Server) getCards(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cards := s.cardSvc.AllCards()
-	var dtos []*dto.CardDTO
 
 	for _, c := range cards {
-		if userId == c.UserId {
+		if userId != c.UserId {
+			dtos := dto.CardErrDTO{Err: card.ErrUserId.Error()}
+			replyErr(w, dtos)
+			return
+		} else {
+			var dtos []*dto.CardDTO
 			dtos = append(
 				dtos,
 				&dto.CardDTO{
@@ -48,13 +52,14 @@ func (s *Server) getCards(w http.ResponseWriter, r *http.Request) {
 					Type:   c.Type,
 					System: c.System,
 				})
+			reply(w, dtos)
 		}
 	}
-	reply(w, dtos)
+
 }
 
 func (s *Server) addCard(w http.ResponseWriter, r *http.Request) {
-	userId := r.FormValue("userId")
+	userId := r.FormValue("userid")
 	cardType := r.FormValue("type")
 	cardSystem := r.FormValue("system")
 

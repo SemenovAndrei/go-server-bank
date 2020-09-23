@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/i-hit/go-server-bank.git/cmd/bank/app"
+	"github.com/i-hit/go-server-bank.git/pkg/app"
 	"github.com/i-hit/go-server-bank.git/pkg/card"
 	"log"
 	"net"
